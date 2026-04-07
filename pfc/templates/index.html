@@ -1,0 +1,194 @@
+<!doctype html>
+{% load static %}
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Калькулятор калорий и БЖУ</title>
+
+  <!-- Шрифт -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <!-- Внешний CSS (сохранить как styles.css рядом с этим файлом) -->
+  <link rel="stylesheet" href="{% static "css/styles.css" %}" />
+  <link rel="icon" href="{% static "images/favicon.ico" %}" />
+
+  <meta name="description" content="Простой и красивый калькулятор калорий и БЖУ — рассчитывает BMR, TDEE и граммы белков/жиров/углеводов по выбранному профилю.">
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <h1 class="title">Калькулятор калорий и БЖУ</h1>
+      <p class="subtitle"></p>
+    </header>
+
+
+
+    <section class="grid">
+
+      <!-- источники Б/Ж/У -->
+      <aside class="card sources-card">
+        <div class="sources-head">
+          <h2>Источники нутриентов</h2>
+          <p>Лучшие источники в 100г продукта</p>
+        </div>
+
+        <div class="sources-tabs" role="tablist" aria-label="Категории источников">
+          <button type="button" class="source-tab active" data-target="protein" role="tab" aria-selected="true">Белки</button>
+          <button type="button" class="source-tab" data-target="fat" role="tab" aria-selected="false">Жиры</button>
+          <button type="button" class="source-tab" data-target="carb" role="tab" aria-selected="false">Углеводы</button>
+        </div>
+
+        <div class="sources-scroll">
+          <div class="source-list active" data-panel="protein">
+            <div class="source-item"><span>Тунец</span><small>Б: 24г · Ж: 1г</small> <img src="{% static "images/protein_tuna.png" %}"></div>
+            <div class="source-item"><span>Индейка</span><small>Б: 24г · Ж: 1.5г</small> <img src="{% static "images/protein_turkey.png" %}"></div>
+            <div class="source-item"><span>Куриная грудка</span><small>Б: 23г · Ж: 2г</small> <img src="{% static "images/protein_breast.png" %}"></div>
+            <div class="source-item"><span>Говядина постная</span><small>Б: 20г · Ж: 7г</small> <img src="{% static "images/protein_beef.png" %}"></div>
+            <div class="source-item"><span>Творог 5%</span><small>Б: 17г · Ж: 5г</small> <img src="{% static "images/protein_curd.png" %}"></div>
+            <div class="source-item"><span>Яйца</span><small>Б: 13г · Ж: 11г </small> <img src="{% static "images/protein_egg.png" %}"></div>
+            <div class="source-item"><span>Греческий йогурт</span><small>Б: 10г · Ж: 0–5г · У: 3г</small> <img src="{% static "images/protein_yogurt.png" %}"></div>
+          </div>
+
+          <div class="source-list" data-panel="fat">
+
+            <div class="source-item"><span>Растительное масло</span><small>Ж: 100г</small><img src="{% static "images/fats_oil.png" %}"></div>
+            <div class="source-item"><span>Орехи</span><small>Ж: 50–70г</small><img src="{% static "images/fats_nuts.png" %}"></div>
+            <div class="source-item"><span>Семена льна</span><small>Ж: 42г</small><img src="{% static "images/fats_seeds.png" %}"></div>
+            <div class="source-item"><span>Сыр</span><small>Б: 20г · Ж: 25г</small><img src="{% static "images/fats_cheese.png" %}"></div>
+          </div>
+
+          <div class="source-list" data-panel="carb">
+            <div class="source-item"><span>Овсянка</span><small>У: 60г</small><img src="{% static "images/carbs_oatmeal.png" %}"></div>
+            <div class="source-item"><span>Рис</span><small>У: 77г</small><img src="{% static "images/carbs_rice.png" %}"></div>
+            <div class="source-item"><span>Гречка</span><small>У: 57г</small><img src="{% static "images/carbs_buckwheat.png" %}"></div>
+            <div class="source-item"><span>Картофель</span><small>У: 17г</small><img src="{% static "images/carbs_potato.png" %}"></div>
+            <div class="source-item"><span>Банан</span><small>У: 23г</small><img src="{% static "images/carbs_banana.png" %}"></div>
+            <div class="source-item"><span>Хлеб цельнозерновой</span><small>У: 40–45г</small><img src="{% static "images/carbs_bread.png" %}"></div>
+          </div>
+        </div>
+      </aside>
+      <!-- Форма -->
+      <form id="calcForm" class="card form-card" onsubmit="return false;">
+        <div class="row">
+          <label>Вес (кг)
+            <input id="weight" type="number" min="20" max="400" step="0.1" value="75" required>
+          </label>
+
+          <label>Рост (см)
+            <input id="height" type="number" min="100" max="250" step="0.1" value="178" required>
+          </label>
+        </div>
+
+        <div class="row">
+          <label>Возраст (лет)
+            <input id="age" type="number" min="10" max="120" step="1" value="28" required>
+          </label>
+
+          <label>Пол
+            <select id="sex">
+              <option value="male">Мужской</option>
+              <option value="female">Женский</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="row">
+          <label>Активность
+            <select id="activity">
+              <option value="1.2">Сидячая (1.2)</option>
+              <option value="1.375">Низкая (1.375)</option>
+              <option value="1.55" selected>Умеренная (1.55)</option>
+              <option value="1.725">Высокая (1.725)</option>
+              <option value="1.9">Очень высокая (1.9)</option>
+            </select>
+          </label>
+
+          <label>Цель
+            <select id="goal">
+              <option value="0.8">Похудение</option>
+              <option value="1.0" selected>Поддержание</option>
+              <option value="1.2">Набор</option>
+            </select>
+          </label>
+        </div>
+
+        <hr class="separator">
+        <hr class="separator">
+
+        <!-- Пресеты макросов -->
+        <div class="presets">
+          <label>Пресеты Б/Ж/У:
+            <div class="preset-buttons" role="radiogroup" aria-label="Пресеты БЖУ">
+              <button type="button" class="chip preset active" data-p="30" data-f="25" data-c="45" aria-checked="true" role="radio">Сбалансированный</button>
+              <button type="button" class="chip preset" data-p="35" data-f="25" data-c="40" aria-checked="false" role="radio">Высокобелковый</button>
+              <button type="button" class="chip preset" data-p="20" data-f="50" data-c="30" aria-checked="false" role="radio">Низкоуглеводный</button>
+            </div>
+          </label>
+        </div>
+
+        <hr class="separator">
+        <hr class="separator">
+
+        <div class="actions">
+          <button id="calcBtn" class="btn primary" type="button">Рассчитать</button>
+          <button id="resetBtn" class="btn ghost" type="button">Сбросить</button>
+        </div>
+      </form>
+
+
+
+      <!-- Результаты -->
+      <aside class="card result-card" aria-live="polite">
+        <h2>Результат</h2>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="small">BMR</div>
+            <div id="bmr" class="big">—</div>
+            <div class="muted">базальный метаболизм, ккал/день</div>
+          </div>
+
+          <div class="result-item">
+            <div class="small">TDEE</div>
+            <div id="tdee" class="big">—</div>
+            <div class="muted">с учётом активности</div>
+          </div>
+
+          <div class="result-item">
+            <div class="small">Целевые ккал</div>
+            <div id="targetCals" class="big">—</div>
+            <div class="muted">после учёта цели</div>
+          </div>
+        </div>
+
+        <hr class="separator">
+
+        <div class="macro-results">
+          <div class="macro-row-res">
+            <div class="macro-label">Белки</div>
+            <div class="macro-values"><span id="protKcal">—</span> ккал — <span id="protGr">—</span> г</div>
+          </div>
+
+          <div class="macro-row-res">
+            <div class="macro-label">Жиры</div>
+            <div class="macro-values"><span id="fatKcal">—</span> ккал — <span id="fatGr">—</span> г</div>
+          </div>
+
+          <div class="macro-row-res">
+            <div class="macro-label">Углеводы</div>
+            <div class="macro-values"><span id="carbKcal">—</span> ккал — <span id="carbGr">—</span> г</div>
+          </div>
+        </div>
+
+        <div class="notes">
+          <p><strong>Подсказка:</strong> общий белок рекомендуется считать ~1.6–2.2 г/кг для активных людей. Выберите пресет и нажмите «Рассчитать».</p>
+        </div>
+      </aside>
+    </section>
+
+    <footer class="footer">Сделал Осипов Даниил 4104-об</footer>
+  </main>
+
+  <script src="{% static "javascript/app.js" %}"></script>
+</body>
+</html>
