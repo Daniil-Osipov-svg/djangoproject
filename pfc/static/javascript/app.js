@@ -1,4 +1,134 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+  //REGISTR
+  // --- AUTH: вход / регистрация (демо на localStorage) ---
+const loginUsernameEl = document.getElementById('loginUsername');
+const loginPasswordEl = document.getElementById('loginPassword');
+const loginBtn = document.getElementById('loginBtn');
+const registerBtn = document.getElementById('registerBtn');
+const authStatus = document.getElementById('authStatus');
+
+const USERS_KEY = 'macrocraft_users';
+const CURRENT_USER_KEY = 'macrocraft_current_user';
+
+function loadUsers() {
+  try {
+    return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function saveUsers(users) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+
+function setAuthMessage(text, type = 'info') {
+  if (!authStatus) return;
+  authStatus.textContent = text;
+  authStatus.className = `auth-status ${type}`;
+}
+
+function getCurrentUser() {
+  try {
+    return JSON.parse(localStorage.getItem(CURRENT_USER_KEY));
+  } catch {
+    return null;
+  }
+}
+
+function setCurrentUser(user) {
+  localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+}
+
+function clearCurrentUser() {
+  localStorage.removeItem(CURRENT_USER_KEY);
+}
+
+function registerUser() {
+  const username = loginUsernameEl.value.trim();
+  const password = loginPasswordEl.value.trim();
+
+  if (username.length < 3) {
+    setAuthMessage('Логин должен быть не короче 3 символов.', 'error');
+    return;
+  }
+
+  if (password.length < 4) {
+    setAuthMessage('Пароль должен быть не короче 4 символов.', 'error');
+    return;
+  }
+
+  const users = loadUsers();
+  const exists = users.some(user => user.username.toLowerCase() === username.toLowerCase());
+
+  if (exists) {
+    setAuthMessage('Такой логин уже существует.', 'error');
+    return;
+  }
+
+  users.push({ username, password });
+  saveUsers(users);
+
+  setCurrentUser({ username });
+  setAuthMessage(`Пользователь "${username}" зарегистрирован и выполнен вход.`, 'success');
+}
+
+function loginUser() {
+  const username = loginUsernameEl.value.trim();
+  const password = loginPasswordEl.value.trim();
+
+  if (!username || !password) {
+    setAuthMessage('Введите логин и пароль.', 'error');
+    return;
+  }
+
+  const users = loadUsers();
+  const user = users.find(
+    u => u.username.toLowerCase() === username.toLowerCase() && u.password === password
+  );
+
+  if (!user) {
+    setAuthMessage('Неверный логин или пароль.', 'error');
+    return;
+  }
+
+  setCurrentUser({ username: user.username });
+  setAuthMessage(`Добро пожаловать, ${user.username}!`, 'success');
+}
+
+function refreshAuthUI() {
+  const currentUser = getCurrentUser();
+  if (currentUser?.username) {
+    setAuthMessage(`Вы вошли как ${currentUser.username}.`, 'success');
+  } else {
+    setAuthMessage('Пользователь не авторизован.', 'info');
+  }
+}
+
+if (loginBtn) {
+  loginBtn.addEventListener('click', loginUser);
+}
+
+if (registerBtn) {
+  registerBtn.addEventListener('click', registerUser);
+}
+
+if (loginPasswordEl) {
+  loginPasswordEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') loginUser();
+  });
+}
+
+if (loginUsernameEl) {
+  loginUsernameEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') loginUser();
+  });
+}
+
+refreshAuthUI();
+
+
   // DOM
   const weightEl = document.getElementById('weight');
   const heightEl = document.getElementById('height');
