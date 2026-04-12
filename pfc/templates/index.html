@@ -96,11 +96,11 @@
         <div class="row">
           <label>Активность
             <select id="activity">
-              <option value="1.2">Сидячая (1.2)</option>
-              <option value="1.375">Низкая (1.375)</option>
-              <option value="1.55" selected>Умеренная (1.55)</option>
-              <option value="1.725">Высокая (1.725)</option>
-              <option value="1.9">Очень высокая (1.9)</option>
+              <option value="1.2">Сидячая</option>
+              <option value="1.375">Низкая</option>
+              <option value="1.55" selected>Умеренная</option>
+              <option value="1.725">Высокая</option>
+              <option value="1.9">Очень высокая</option>
             </select>
           </label>
 
@@ -120,9 +120,9 @@
         <div class="presets">
           <label>Пресеты Б/Ж/У:
             <div class="preset-buttons" role="radiogroup" aria-label="Пресеты БЖУ">
-              <button type="button" class="chip preset active" data-p="30" data-f="25" data-c="45" aria-checked="true" role="radio">Сбалансированный</button>
-              <button type="button" class="chip preset" data-p="35" data-f="25" data-c="40" aria-checked="false" role="radio">Высокобелковый</button>
-              <button type="button" class="chip preset" data-p="20" data-f="50" data-c="30" aria-checked="false" role="radio">Низкоуглеводный</button>
+              <button type="button" class="chip preset active" data-p="15" data-f="30" data-c="55" aria-checked="true" role="radio">Сбалансированный</button>
+              <button type="button" class="chip preset" data-p="25" data-f="30" data-c="45" aria-checked="false" role="radio">Высокобелковый</button>
+              <button type="button" class="chip preset" data-p="15" data-f="60" data-c="25" aria-checked="false" role="radio">Низкоуглеводный</button>
             </div>
           </label>
         </div>
@@ -167,8 +167,10 @@
       </section>
       <!-- логин -->
 
-      <section class="card empty-card">
-        <div class="empty-placeholder">Пустой блок</div>
+      <section class="card history-card">
+        <h2>История веса</h2>
+        <div id="historyStatus" class="history-status">Войдите в аккаунт, чтобы увидеть список.</div>
+        <div id="historyList" class="history-list"></div>
       </section>
 
       <aside class="card result-card" aria-live="polite">
@@ -213,7 +215,7 @@
         </div>
 
         <div class="notes">
-          <p><strong>Подсказка:</strong> общий белок рекомендуется считать ~1.6–2.2 г/кг для активных людей. Выберите пресет и нажмите «Рассчитать».</p>
+
         </div>
       </aside>
     </div>
